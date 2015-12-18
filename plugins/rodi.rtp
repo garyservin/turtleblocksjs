@@ -28,6 +28,10 @@ var lightSensorCache = null;
 var lightSensorValidFor = 100;
 var lightSensorCacheExpires = 0;
 
+var imuCache = null;
+var imuValidFor = 100;
+var imuCacheExpires = 0;
+
 var doRodiMove = function (left, right) {
     var apiUrl = RODI_BASE_URL + '/3/' + left + '/' + right + '/';
     doAsyncCall(apiUrl)
@@ -68,6 +72,25 @@ var doRodiGetLightSensor = function () {
 
     } else {
         return lightSensorCache;
+    }
+};
+
+var doRodiGetIMU = function (index) {
+    if (Date.now() > imuCacheExpires) {
+
+        var apiUrl = RODI_BASE_URL + '/9/';
+        var imu = doSyncCall(apiUrl);
+
+        if (imu != null) {
+            imuCacheExpires = Date.now() + imuValidFor;
+            imuCache = imu;
+            return imu[index];
+        } else {
+            return -1
+        }
+
+    } else {
+        return imuCache[index];
     }
 };
 
@@ -348,6 +371,104 @@ var conns = block.connections;
 var state = logo.parseArg(logo, turtle, conns[1]);
 var apiUrl = RODI_BASE_URL + '/8/' + state + '/';
 doAsyncCall(apiUrl);
+
+//* block:rodiaccelx *//
+
+var rodiAccelX = new ProtoBlock('rodiaccelx');
+rodiAccelX.palette = palettes.dict['rodi'];
+blocks.protoBlockDict['rodiaccelx'] = rodiAccelX;
+rodiAccelX.staticLabels.push(_('acceleration (x-axis)'));
+rodiAccelX.adjustWidthToLabel();
+rodiAccelX.parameterBlock();
+
+//* arg:rodiaccelx *//
+
+var block = logo.blocks.blockList[blk];
+block.value = doRodiGetIMU(0);
+
+//* block:rodiaccely *//
+
+var rodiAccelY = new ProtoBlock('rodiaccely');
+rodiAccelY.palette = palettes.dict['rodi'];
+blocks.protoBlockDict['rodiaccely'] = rodiAccelY;
+rodiAccelY.staticLabels.push(_('acceleration (y-axis)'));
+rodiAccelY.adjustWidthToLabel();
+rodiAccelY.parameterBlock();
+
+//* arg:rodiaccely *//
+
+var block = logo.blocks.blockList[blk];
+block.value = doRodiGetIMU(1);
+
+//* block:rodiaccelz *//
+
+var rodiAccelZ = new ProtoBlock('rodiaccelz');
+rodiAccelZ.palette = palettes.dict['rodi'];
+blocks.protoBlockDict['rodiaccelz'] = rodiAccelZ;
+rodiAccelZ.staticLabels.push(_('acceleration (z-axis)'));
+rodiAccelZ.adjustWidthToLabel();
+rodiAccelZ.parameterBlock();
+
+//* arg:rodiaccelz *//
+
+var block = logo.blocks.blockList[blk];
+block.value = doRodiGetIMU(2);
+
+//* block:rodigyrox *//
+
+var rodiGyroX = new ProtoBlock('rodigyrox');
+rodiGyroX.palette = palettes.dict['rodi'];
+blocks.protoBlockDict['rodigyrox'] = rodiGyroX;
+rodiGyroX.staticLabels.push(_('angular velocity (x-axis)'));
+rodiGyroX.adjustWidthToLabel();
+rodiGyroX.parameterBlock();
+
+//* arg:rodigyrox *//
+
+var block = logo.blocks.blockList[blk];
+block.value = doRodiGetIMU(3);
+
+//* block:rodigyroy *//
+
+var rodiGyroY = new ProtoBlock('rodigyroy');
+rodiGyroY.palette = palettes.dict['rodi'];
+blocks.protoBlockDict['rodigyroy'] = rodiGyroY;
+rodiGyroY.staticLabels.push(_('angular velocity (y-axis)'));
+rodiGyroY.adjustWidthToLabel();
+rodiGyroY.parameterBlock();
+
+//* arg:rodigyroy *//
+
+var block = logo.blocks.blockList[blk];
+block.value = doRodiGetIMU(4);
+
+//* block:rodigyroz *//
+
+var rodiGyroZ = new ProtoBlock('rodigyroz');
+rodiGyroZ.palette = palettes.dict['rodi'];
+blocks.protoBlockDict['rodigyroz'] = rodiGyroZ;
+rodiGyroZ.staticLabels.push(_('angular velocity (z-axis)'));
+rodiGyroZ.adjustWidthToLabel();
+rodiGyroZ.parameterBlock();
+
+//* arg:rodigyroz *//
+
+var block = logo.blocks.blockList[blk];
+block.value = doRodiGetIMU(5);
+
+//* block:roditemperature *//
+
+var rodiTemperature = new ProtoBlock('roditemperature');
+rodiTemperature.palette = palettes.dict['rodi'];
+blocks.protoBlockDict['roditemperature'] = rodiTemperature;
+rodiTemperature.staticLabels.push(_('temperature'));
+rodiTemperature.adjustWidthToLabel();
+rodiTemperature.parameterBlock();
+
+//* arg:roditemperature *//
+
+var block = logo.blocks.blockList[blk];
+block.value = Number(doRodiGetIMU(6) / 10.0);
 
 //* palette-icon:rodi *//
 
