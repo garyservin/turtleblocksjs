@@ -166,7 +166,13 @@ function doRodiStop(){
     doRodiMove(null, null, 0, 0);
 };
 
-blocks.logo.stage.addEventListener('__STOP__', doRodiStop, false);
+//* onstop:rodi_onstop *//
+
+doRodiStop();
+
+//* onload:rodi_onload *//
+
+doRodiStop();
 
 //* block:rodiblink *//
 
